@@ -12,7 +12,7 @@ terraform {
 
 module "iam" {
   source = "../../modules/iam"
-
+  ecr_arn = module.ecr.ecr_arn
   ecr_repository_name = module.ecr.ecr_repository_name
 }
 

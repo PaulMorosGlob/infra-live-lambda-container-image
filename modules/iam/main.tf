@@ -2,37 +2,37 @@ provider "aws" {
   region = var.region
 }
 
+resource "aws_iam_policy" "ecr_access_policy" {
+  name        = "ECRAccessPolicy"
+  description = "Policy for ECR access"
+  
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:CompleteLayerUpload",
+        "ecr:PutImage"
+      ],
+      "Resource": "${var.ecr_arn}"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_policy_attachment" "lambda_ecr_access" {
   name  = "${var.app_name}_${var.environment}_ecr_access"
   roles = [aws_iam_role.lambda_exec_role.name]
 
-  policy_arn = aws_ecr_repository_policy.ecr_repository.policy
-}
-
-resource "aws_ecr_repository_policy" "ecr_repository" {
-  repository = var.ecr_repository_name
-
-  policy     = <<EOF
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Effect": "Allow",          
-          "Action": [
-            "ecr:GetDownloadUrlForLayer",
-            "ecr:BatchCheckLayerAvailability",
-            "ecr:BatchGetImage",
-            "ecr:InitiateLayerUpload",
-            "ecr:UploadLayerPart",
-            "ecr:CompleteLayerUpload",
-            "ecr:PutImage",
-            "ecr:ListImages"
-          ],
-          "Resource": ["*"]
-        }
-      ]
-    }
-EOF
+  policy_arn = aws_iam_policy.ecr_access_policy.arn
 }
 
 resource "aws_iam_role" "lambda_exec_role" {

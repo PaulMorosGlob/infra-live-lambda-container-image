@@ -3,6 +3,10 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "ecr_arn" {
+    type    = string    
+}
+
 variable "ecr_repository_name" {
     type    = string    
 }
