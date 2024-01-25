@@ -5,7 +5,7 @@ provider "aws" {
 resource "aws_iam_policy" "ecr_access_policy" {
   name        = "ECRAccessPolicy"
   description = "Policy for ECR access"
-  
+
   policy = <<EOF
 {
   "Version": "2012-10-17",

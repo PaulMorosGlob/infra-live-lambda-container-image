@@ -4,10 +4,10 @@ resource "aws_lambda_function" "example_lambda" {
   package_type  = "Image"
   image_uri     = "${aws_ecr_repository.ecr_repo.repository_url}:latest"
 
-  timeout = 60
+  timeout     = 60
   memory_size = 512
-  depends_on = [null_resource.local_image]
-  tags = var.tags
+  depends_on  = [null_resource.local_image]
+  tags        = var.tags
 }
 
 resource "aws_api_gateway_rest_api" "example_api" {
@@ -34,7 +34,7 @@ resource "aws_api_gateway_integration" "example_api_integration" {
   http_method             = aws_api_gateway_method.example_api_method_hello.http_method
   integration_http_method = "GET"
   type                    = "AWS_PROXY"
-  uri = aws_lambda_function.example_lambda.invoke_arn
+  uri                     = aws_lambda_function.example_lambda.invoke_arn
 }
 
 resource "aws_lambda_permission" "example_lambda_permission" {
